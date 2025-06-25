@@ -1,0 +1,27 @@
+[project]
+name = "friEnd"
+version = "0.1.0"
+description = "Datasets for BESTIE"
+authors = [
+    { name = "Oliver Janik", email = "oliver.janik@fau.de" }
+]
+license = { text = "MIT" }
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy<2.0",
+    "jax",
+    "pandas",
+    "PyForwardFolding @ git+https://github.com/chrhck/pyForwardFolding.git"
+]
+
+[project.optional-dependencies]
+dev = [
+    "black",
+    "ruff",
+    "pytest",
+]
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
