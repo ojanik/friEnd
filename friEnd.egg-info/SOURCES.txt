@@ -1,0 +1,11 @@
+LICENSE
+README.md
+pyproject.toml
+friEnd/__init__.py
+friEnd/friend.py
+friEnd/pyff_friend.py
+friEnd.egg-info/PKG-INFO
+friEnd.egg-info/SOURCES.txt
+friEnd.egg-info/dependency_links.txt
+friEnd.egg-info/requires.txt
+friEnd.egg-info/top_level.txt

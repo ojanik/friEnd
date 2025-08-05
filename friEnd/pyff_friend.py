@@ -1,11 +1,5 @@
 import jax
-jax.config.update("jax_enable_x64", False)
-
-import jax.numpy as jnp
-import matplotlib.pyplot as plt
-import numpy as onp
-import pandas as pd
-from copy import deepcopy
+jax.config.update("jax_enable_x64", True)
 
 from functools import partial
 
@@ -14,12 +8,16 @@ import pyForwardFolding as pyFF
 from .friend import Friend
 
 class PyFF_Friend(Friend):
-    def __init__(self,df_path,outfile,input_vars,pyffconfig):
-        super().__init__(df_path,outfile)
+    def __init__(self,df_path,outfile,keys_to_keep,
+                 input_vars,pyffconfig,dataset_name):
         self.pyffconfig = pyffconfig
         self.input_variables = input_vars
+        self.dataset_name = dataset_name
+        super().__init__(df_path,outfile,keys_to_keep)
+        
 
-    def get_models(self):
-        model = pyFF.config.models_from_config(model = pyFF.config.models_from_config(self.pyffconfig))
-        model = partial(model.evaluate,input_variables=self.input_variables)
-        return model
+    def get_model(self):
+        model = pyFF.config.models_from_config(self.pyffconfig)[self.dataset_name]
+        def model_partial(input_params):
+            return model.evaluate(self.input_variables,input_params)
+        return model_partial

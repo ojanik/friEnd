@@ -1,0 +1,9 @@
+numpy<2.0
+jax
+pandas
+PyForwardFolding@ git+https://github.com/chrhck/pyForwardFolding.git
+
+[dev]
+black
+ruff
+pytest
