@@ -17,7 +17,7 @@ class PyFF_Friend(Friend):
         
 
     def get_model(self):
-        model = pyFF.config.models_from_config(self.pyffconfig)[self.dataset_name]
+        model = pyFF.config.models_from_config(self.pyffconfig)[self.dataset_name]["model"]
         def model_partial(input_params):
             return model.evaluate(self.input_variables,input_params)
         return model_partial
