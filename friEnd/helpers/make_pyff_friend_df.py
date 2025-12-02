@@ -8,69 +8,47 @@ import pandas as pd
 import sys
 from pathlib import Path
 
+from friEnd import PyFF_Friend
+import pyForwardFolding as pyFF
+
+import jax.numpy as jnp
+
 
 def parse_args():
     parser = argparse.ArgumentParser(
         description="Process a DataFrame from HDF5/Parquet and save as Parquet."
     )
-    parser.add_argument(
-        "--input",
-        required=True,
-        type=Path,
-        help="Path to input DataFrame (.h5 or .parquet)"
-    )
-    parser.add_argument(
-        "--output",
-        required=True,
-        type=Path,
-        help="Path to output Parquet file"
-    )
 
     parser.add_argument(
         "--config",
         required=True,
-        type=Path,
+        type=str,
         help="Path to output Parquet file"
+    )
+
+    parser.add_argument(
+        "--clear",
+        action="store_true",
+        help="Clear previous created key"
     )
 
     return parser.parse_args()
 
 
-def load_dataframe(path: Path) -> pd.DataFrame:
-    if not path.exists():
-        sys.exit(f"Error: input file '{path}' does not exist.")
-    
-    suffix = path.suffix.lower()
-    if suffix in [".h5", ".hdf", ".hdf5"]:
-        return pd.read_hdf(path)
-    elif suffix == ".parquet":
-        return pd.read_parquet(path)
-    else:
-        sys.exit(f"Unsupported file format: {suffix}")
-
-
-def process_dataframe(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    TODO: Implement your custom processing logic here.
-    For now, this just returns the DataFrame unchanged.
-    """
-    return df
-
 
 def main():
     args = parse_args()
 
-    # Load
-    df = load_dataframe(args.input)
+    config = args.config
 
-    # Process
-    df_processed = process_dataframe(df)
+    model_params, priors = pyFF.config.params_from_config(config)
 
-    # Save
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    df_processed.to_parquet(args.output, index=False)
-    print(f"Saved processed DataFrame to {args.output}")
+    fr = PyFF_Friend(config,model_params,clear=args.clear)
+    fr.add_weights()
+    fr._save_output()
+    
 
 
 if __name__ == "__main__":
     main()
+    print("Done")
